@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>项目基本信息</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+</head>
+
+<body class="hold-transition layout-top-nav">
+  <div class="wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">数据发布设置</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">内容发布</a></li>
+                <li class="breadcrumb-item active">数据发布设置</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">发布内容</h3>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="keyWord">关键词</label>
+                        <select onchange="loadData();" id="keyWord" name="keyWord"></select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="write">撰写目标</label>
+                        <input type="number" class="form-control" name="write" id="write" placeholder="撰写目标">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="haveRrite">已撰写</label>
+                        <input type="number" class="form-control" name="haveRrite" id="haveRrite" placeholder="已撰写">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="publish">发布目标</label>
+                        <input type="number" class="form-control" name="publish" id="publish" placeholder="发布目标">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="havepublish">已发布</label>
+                        <input type="number" class="form-control" name="havepublish" id="havepublish" placeholder="已发布">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="read">阅读量目标</label>
+                        <input type="number" class="form-control" name="read" id="read" placeholder="阅读量目标">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="haveRead">已阅读</label>
+                        <input type="number" class="form-control" name="haveRead" id="haveRead" placeholder="已阅读">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <button class="btn btn-primary" onclick="save();">保存</button>
+                  </div>
+                </div>
+                <div class="card-footer"></div>
+              </div>
+            </div>
+            <!-- /.row -->
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+    </div>
+  </div>
+  <!-- ./wrapper -->
+  <!-- REQUIRED SCRIPTS -->
+  <!-- jQuery -->
+  <script src="plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE -->
+  <script src="dist/js/adminlte.js"></script>
+
+  <script src="dist/js/common.js"></script>
+  <script>
+    var sourceData = {};
+    $(function () {
+      loadKeyWord();
+
+    })
+    function loadKeyWord() {
+      var categoryUrl = domainUrl + "/category/admin/get";
+      getMessage(categoryUrl).then(function (res) {
+        if (res.code == 200) {
+          if (res.data == null)
+            return;
+          res.data.forEach(element => {
+            var optionValue = element.id;
+            var optionText = element.name;
+            $('#keyWord').append(new Option(optionText, optionValue))
+          });
+          $("#keyWord").find("option").eq(0).attr("selected", true);
+          loadData();
+        } else {
+          alert(res.message)
+        }
+      })
+    }
+    function loadData() {
+      var getUrl = domainUrl + "/categoryMaintenance/get?categoryId=" + $("#keyWord").val();
+      getMessage(getUrl).then(function (res) {
+        if (res.code == 200) {
+          if (res.data != null) {
+            sourceData = res.data;
+            $("#write").val(res.data.write);
+            $("#haveRrite").val(res.data.haveRrite);
+            $("#publish").val(res.data.publish);
+            $("#havepublish").val(res.data.havepublish);
+            $("#read").val(res.data.read);
+            $("#haveRead").val(res.data.haveRead);
+          }
+
+        } else {
+          alert(res.message)
+        }
+      })
+    }
+    function save() {
+      var saveUrl = domainUrl + "/categoryMaintenance/save";
+      postMessage(saveUrl, {
+        id: sourceData.id,
+        categoryId: $("#keyWord").val(),
+        writeTotal: $("#haveRrite").val(),
+        writePlanTotal: $("#write").val(),
+        publishTotal: $("#havepublish").val(),
+        publishPlanTotal: $("#publish").val(),
+        readTotal: $("#haveRead").val(),
+        readPlanTotal: $("#read").val()
+      }).then(function (res) {
+        if (res.code == 200) {
+          alert("保存成功");
+        } else {
+          alert(res.message);
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

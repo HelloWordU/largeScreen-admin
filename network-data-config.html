@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>项目基本信息</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- jsGrid -->
+    <link rel="stylesheet" href="plugins/jsgrid/jsgrid.min.css">
+    <link rel="stylesheet" href="plugins/jsgrid/jsgrid-theme.min.css">
+</head>
+<body class="hold-transition layout-top-nav">
+<div class="wrapper">
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-article">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">平台达标设置</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">网络监控</a></li>
+              <li class="breadcrumb-item active">平台达标设置</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="card">
+        <div class="card-header">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="keyWord">关键词</label>
+              <select onchange="loadData();" id="keyWord" name="keyWord"></select>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class=""></div>
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-default"
+              class="btn btn-primary btn-sm"><i class="fa fa-copy"></i> 新增</a>
+          </div>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <div id="jsGrid1" class="jsgrid" style="min-height: 500px ;"></div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.content -->
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="dist/js/adminlte.js"></script>
+  <!-- jsGrid -->
+  <script src="plugins/jsgrid/jsgrid.min.js"></script>
+<script src="dist/js/common.js"></script>
+  <!-- Page specific script -->
+  <script>
+    $(function () {
+      $("#jsGrid1").jsGrid({
+        height: "100%",
+        width: "100%",
+        editing: true,
+        sorting: true,
+        paging: true,
+        autoload: false,
+        controller: {
+          loadData: function () {
+            var d = $.Deferred();
+            var getData = domainUrl + "/monitoringPlantformStatistic/getByCategoryId?categoryId=" + $("#keyWord").val();
+            getMessage(getData).then(function (res) {
+              if (res.code == 200) {
+                d.resolve(res.data);
+              } else {
+                alert(res.message)
+              }
+            })
+            return d.promise();
+          },
+        },
+        onItemUpdated: function (args) {
+          saveCategoryHotWord(args.item);
+        },
+
+        fields: [
+          // { name: "id", type: "number", width: 50 },
+          { name: "plantformName", title: "监控平台", type: "text", width: 150,readOnly: true  },
+          { name: "isReachingStandard", title: "达标", type: "checkbox", width: 80 },
+          { name: '操作', type: "control", width: 80,  deleteButton: false,    }
+        ]
+      });
+      loadKeyWord();
+    });
+    function loadKeyWord() {
+      var categoryUrl = domainUrl + "/category/admin/get";
+      getMessage(categoryUrl).then(function (res) {
+        if (res.code == 200) {
+          if (res.data == null)
+            return;
+          res.data.forEach(element => {
+            var optionValue = element.id;
+            var optionText = element.name;
+            $('#keyWord').append(new Option(optionText, optionValue));
+            $('#addKeyword').append(new Option(optionText, optionValue));
+          });
+          $("#keyWord").find("option").eq(0).attr("selected", true);
+          $("#jsGrid1").jsGrid("loadData");
+        } else {
+          alert(res.message)
+        }
+      })
+    }
+    function loadData() {
+      $("#jsGrid1").jsGrid("loadData");
+    }
+    function save(id, plantformId, isReachingStandard) {
+      var saveUrl = domainUrl + "/monitoringPlantformStatistic/save";
+      postMessage(saveUrl, {
+        id: id,
+        plantformId: plantformId,
+        isReachingStandard: isReachingStandard
+      }).then(function (res) {
+        if (res.code == 200) {
+          alert("保存成功");
+          $("#jsGrid1").jsGrid("loadData");
+        } else {
+          alert(res.message);
+        }
+      })
+    }
+    function saveCategoryHotWord(dataItem) {
+      save(dataItem.id, dataItem.plantformId, dataItem.isReachingStandard);
+    }
+  </script>
+</body>
+</html>

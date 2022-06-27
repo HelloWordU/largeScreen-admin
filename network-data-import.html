@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>监控平台文章设置</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- jsGrid -->
+  <link rel="stylesheet" href="plugins/jsgrid/jsgrid.min.css">
+  <link rel="stylesheet" href="plugins/jsgrid/jsgrid-theme.min.css">
+</head>
+
+<body class="hold-transition layout-top-nav">
+  <div class="wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">监控平台文章设置</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">网络监控</a></li>
+                <li class="breadcrumb-item active">监控平台文章设置</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <div class="content">
+        <div class="card">
+          <div class="card-header">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="keyWord">关键词</label>
+                <select onchange="loadData();" id="keyWord" name="keyWord"></select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class=""></div>
+              <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-default"
+                class="btn btn-primary btn-sm">
+                <i class="fa fa-copy"></i> 导入</a>
+              <a href="/dist/MonitoringPlantformArticle.xlsx" target="_blank" class="btn btn-primary btn-sm">
+                <i class="fa fa-expand"></i> 模板下载</a>
+            </div>
+
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <div id="jsGrid1" style="min-height: 500px ;"></div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.content -->
+    </div>
+  </div>
+  <!-- ./wrapper -->
+  <div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">导入文章</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addKeyword">关键词</label>
+                <select id="addKeyword" name="addKeyword" onchange="loadPlantForm();"></select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="plantForm">监控平台</label>
+                <select id="plantForm" name="plantForm"></select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="uploadFile1">请上传文件</label>
+                <input type="file" class="form-control" id="uploadFile1" placeholder="请选择文件">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" onclick="save();">保存</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- REQUIRED SCRIPTS -->
+  <!-- jQuery -->
+  <script src="plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE -->
+  <script src="dist/js/adminlte.js"></script>
+  <!-- jsGrid -->
+  <script src="plugins/jsgrid/demos/db.js"></script>
+  <script src="plugins/jsgrid/jsgrid.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+  <script src="dist/js/common.js"></script>
+  <!-- Page specific script -->
+  <script>
+    $(function () {
+      $("#jsGrid1").jsGrid({
+        height: "100%",
+        width: "100%",
+        editing: false,
+        sorting: true,
+        paging: true,
+        autoload: false,
+        controller: {
+          loadData: function () {
+            var d = $.Deferred();
+            var getData = domainUrl + "/monitoringPlantformArticle/get?categoryId=" + $("#keyWord").val();
+            getMessage(getData).then(function (res) {
+              if (res.code == 200) {
+                d.resolve(res.data);
+              } else {
+                alert(res.message)
+              }
+            })
+            return d.promise();
+          },
+        },
+
+        fields: [
+          // { name: "id", type: "number", width: 50 },
+          { name: "plantformName", title: "平台", type: "text", width: 150 },
+          { name: "categoryName", title: "关键词", type: "text", width: 150 },
+          { name: "title", title: "标题", type: "text", width: 150 },
+          { name: "url", title: "地址", type: "text", width: 150 },
+        ]
+      });
+      loadKeyWord();
+    });
+    function loadKeyWord() {
+      var categoryUrl = domainUrl + "/category/admin/get";
+      getMessage(categoryUrl).then(function (res) {
+        if (res.code == 200) {
+          if (res.data == null)
+            return;
+          res.data.forEach(element => {
+            var optionValue = element.id;
+            var optionText = element.name;
+            $('#keyWord').append(new Option(optionText, optionValue));
+            $('#addKeyword').append(new Option(optionText, optionValue));
+          });
+          $("#keyWord").find("option").eq(0).attr("selected", true);
+          loadPlantForm();
+          $("#jsGrid1").jsGrid("loadData");
+        } else {
+          alert(res.message)
+        }
+      })
+    }
+
+    function loadPlantForm() {
+      var categoryUrl = domainUrl + "/monitoringPlantform/getByCategoryId?categoryId=" + $("#addKeyword").val();
+      getMessage(categoryUrl).then(function (res) {
+        if (res.code == 200) {
+          $('#plantForm').find('option').remove();
+          if (res.data == null)
+            return;
+          res.data.forEach(element => {
+            var optionValue = element.id;
+            var optionText = element.name;
+            $('#plantForm').append(new Option(optionText, optionValue));
+          });
+        } else {
+          alert(res.message)
+        }
+      })
+    }
+
+    function loadData() {
+      $("#jsGrid1").jsGrid("loadData");
+    }
+    function save() {
+      var saveUrl = domainUrl + "/monitoringPlantformArticle/upload";
+      var data = new FormData();
+      data.append('categoryId', $("#addKeyword").val());
+      data.append('plantformId', $("#plantForm").val());
+      data.append('uploadFile', $("#uploadFile1").prop("files")[0]);
+
+      $.ajax({
+        url: saveUrl,
+        type: 'POST',
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
+        beforeSend: function (request) {
+          request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+        success: function (res) {
+          if (res.code == 200) {
+            alert("上传成功");
+            $("#uploadFile1").val('');
+            loadData();
+          }
+          else {
+            alert(res.message);
+          }
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
