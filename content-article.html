@@ -149,7 +149,17 @@
             return d.promise();
           },
         },
-
+        onItemDeleted: function (args) {
+          var id = args.item.id;
+          var categoryUrl = domainUrl + "/categoryArticle/delete?id=" + id;
+          postMessage(categoryUrl, {}).then(function (res) {
+            if (res.code == 200) {
+            } else {
+              alert(res.message);
+              $("#jsGrid1").jsGrid("loadData");
+            }
+          });
+        },
         fields: [
           // { name: "id", type: "number", width: 50 },
           { name: "title", title: "标题", type: "text", width: 150 },
@@ -158,6 +168,7 @@
           { name: "sheet", title: "版面、作者", type: "text", width: 150 },
           { name: "readCount", title: "阅读数", type: "number", width: 80 },
           { name: "commentCount", title: "评论数", type: "number", width: 80 },
+          { name: '操作', type: "control", width: 80,  deleteButton: true, editButton:false   }
         ]
       });
       loadKeyWord();
@@ -211,15 +222,6 @@
           }
         }
       });
-      // postMessage(saveUrl, data,false).then(function (res) {
-      //   if (res.code == 200) {
-      //     alert("上传成功");
-      //     loadData();
-      //   }
-      //   else {
-      //     alert(res.message);
-      //   }
-      // });
     }
   </script>
 </body>

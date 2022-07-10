@@ -157,13 +157,24 @@
             return d.promise();
           },
         },
-
+        onItemDeleted: function (args) {
+          var id = args.item.id;
+          var categoryUrl = domainUrl + "/monitoringPlantformArticle/delete?id=" + id;
+          postMessage(categoryUrl, {}).then(function (res) {
+            if (res.code == 200) {
+            } else {
+              alert(res.message);
+              $("#jsGrid1").jsGrid("loadData");
+            }
+          });
+        },
         fields: [
           // { name: "id", type: "number", width: 50 },
           { name: "plantformName", title: "平台", type: "text", width: 150 },
           { name: "categoryName", title: "关键词", type: "text", width: 150 },
           { name: "title", title: "标题", type: "text", width: 150 },
           { name: "url", title: "地址", type: "text", width: 150 },
+          { name: '操作', type: "control", width: 80,   deleteButton: true, editButton:false  }
         ]
       });
       loadKeyWord();

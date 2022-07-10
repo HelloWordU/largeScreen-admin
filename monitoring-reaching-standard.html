@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>达标率走势达标设置</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- jsGrid -->
+  <link rel="stylesheet" href="plugins/jsgrid/jsgrid.min.css">
+  <link rel="stylesheet" href="plugins/jsgrid/jsgrid-theme.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+</head>
+
+<body class="hold-transition layout-top-nav">
+  <div class="wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">达标率走势达标设置</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">网络监控</a></li>
+                <li class="breadcrumb-item active">达标率走势达标设置</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <div class="content">
+        <div class="card">
+          <div class="card-header">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="keyWord">关键词</label>
+                <select onchange="loadData();" id="keyWord" name="keyWord"></select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="btn-group">
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-default"
+                  class="btn btn-primary btn-sm"><i class="fa fa-copy"></i> 新增</a>
+              </div>
+              <div class="btn-group">
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-upload"
+                  class="btn btn-primary btn-sm">
+                  <i class="fa fa-circle"></i> 导入</a>
+              </div>
+              <div class="btn-group">
+                <a href="/dist/MonitoringReachingStandardCount.xlsx" target="_blank" class="btn btn-primary btn-sm">
+                  <i class="fa fa-expand"></i> 模板下载</a>
+              </div>
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div id="jsGrid1" class="jsgrid" style="min-height: 500px ;"></div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.content -->
+      </div>
+    </div>
+    <!-- ./wrapper -->
+    <div class="modal fade" id="modal-default">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">新增达标率走势达标</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="addKeyword">关键词</label>
+                  <select id="addKeyword" name="addKeyword"></select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="type">监控类型</label>
+                  <select id="type" name="type">
+                    <option selected value="1">自身</option>
+                    <option value="2">竞品</option>
+                    <option value="3">行业</option>
+                    <option value="4">自身竞品对比</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="reaching_standard_count">达标数</label>
+                  <input type="number" class="form-control" name="reaching_standard_count" value="6" id="reaching_standard_count"
+                    placeholder="达标数">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>监控日期</label>
+                  <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" id="monitoringDate" name="monitoringDate" data-target="#reservationdate" />
+                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="addCategoryHotWord()">保存</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- ./wrapper -->
+    <div class="modal fade" id="modal-upload">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">导入达标</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="uploadKeyword">关键词</label>
+                  <select id="uploadKeyword" name="uploadKeyword"></select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="uploadType">监控类型</label>
+                  <select id="uploadType" name="uploadType">
+                    <option selected value="1">自身</option>
+                    <option value="2">竞品</option>
+                    <option value="3">行业</option>
+                    <option value="4">自身竞品对比</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="uploadFile1">请上传文件</label>
+                  <input type="file" class="form-control" id="uploadFile1" placeholder="请选择文件">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="upload();">保存</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- InputMask -->
+    <script src="plugins/moment/moment.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="dist/js/adminlte.js"></script>
+    <!-- jsGrid -->
+    <script src="plugins/jsgrid/jsgrid.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="dist/js/common.js"></script>
+    <!-- Page specific script -->
+    <script>
+      var monitoringTypeData =[
+        {ID:1,Name:"自身"},
+        {ID:2,Name:"竞品"},
+        {ID:3,Name:"行业"},
+        {ID:4,Name:"自身竞品对比"}];
+      $(function () {
+        $("#jsGrid1").jsGrid({
+          height: "100%",
+          width: "100%",
+          editing: true,
+          sorting: true,
+          paging: true,
+          autoload: false,
+          controller: {
+            loadData: function () {
+              var d = $.Deferred();
+              var getData = domainUrl + "/monitoringReachingStandardCount/getWeekMonitoring?categoryId=" + $("#keyWord").val();
+              getMessage(getData).then(function (res) {
+                if (res.code == 200) {
+                  d.resolve(res.data);
+                } else {
+                  alert(res.message)
+                }
+              })
+              return d.promise();
+            },
+          },
+          onItemDeleted: function (args) {
+            var id = args.item.id;
+            var categoryUrl = domainUrl + "/monitoringReachingStandardCount/delete?id=" + id;
+            postMessage(categoryUrl, {}).then(function (res) {
+              if (res.code == 200) {
+              } else {
+                alert(res.message);
+                $("#jsGrid1").jsGrid("loadData");
+              }
+            });
+          },
+          onItemUpdated: function (args) {
+            saveCategoryHotWord(args.item);
+          },
+
+          fields: [
+            { name: "typeName",title: "监控类型",  type: "text", width: 150 },
+            // { name: "type",  type: "select", items: monitoringTypeData, valueField: "Id", textField: "Name", title: "监控类型", width: 150 },
+            { name: "monitoringDate", title: "监控日期", type: "text", width: 150 },
+            { name: "reachingStandardCount", title: "数量", type: "number", width: 150 },
+            { name: '操作', type: "control", width: 80, deleteButton: true, editButton:false  }
+          ]
+        });
+        loadKeyWord();
+        //Date picker
+        $('#reservationdate').datetimepicker({
+          format: 'YYYY-MM-DD',
+          locale: 'zh-CN'
+        });
+
+      });
+      function loadKeyWord() {
+        var categoryUrl = domainUrl + "/category/admin/get";
+        getMessage(categoryUrl).then(function (res) {
+          if (res.code == 200) {
+            if (res.data == null)
+              return;
+            res.data.forEach(element => {
+              var optionValue = element.id;
+              var optionText = element.name;
+              $('#keyWord').append(new Option(optionText, optionValue));
+              $('#addKeyword').append(new Option(optionText, optionValue));
+              $('#uploadKeyword').append(new Option(optionText, optionValue));
+            });
+            $("#keyWord").find("option").eq(0).attr("selected", true);
+            $("#jsGrid1").jsGrid("loadData");
+          } else {
+            alert(res.message)
+          }
+        })
+      }
+      function loadData() {
+        $("#jsGrid1").jsGrid("loadData");
+      }
+      function save(id, type, monitoringDate, reachingStandardCount, categoryId) {
+        var saveUrl = domainUrl + "/monitoringReachingStandardCount/save";
+        postMessage(saveUrl, {
+          id: id,
+          type: type,
+          monitoringDate: monitoringDate,
+          reachingStandardCount: reachingStandardCount,
+          categoryId: categoryId
+        }).then(function (res) {
+          if (res.code == 200) {
+            alert("保存成功");
+            $("#jsGrid1").jsGrid("loadData");
+          } else {
+            alert(res.message);
+          }
+        })
+      }
+      function saveCategoryHotWord(dataItem) {
+        save(dataItem.id, dataItem.type, dataItem.monitoringDate, dataItem.reachingStandardCount, dataItem.categoryId);
+      }
+      function addCategoryHotWord() {
+        save(null, $('#type').val(), $('#monitoringDate').val(), $('#reaching_standard_count').val(), $('#addKeyword').val());
+      }
+
+      function upload() {
+        var saveUrl = domainUrl + "/monitoringReachingStandardCount/upload";
+        var data = new FormData();
+        data.append('categoryId', $("#uploadKeyword").val());
+        data.append('type', $("#uploadType").val());
+        data.append('uploadFile', $("#uploadFile1").prop("files")[0]);
+
+        $.ajax({
+          url: saveUrl,
+          type: 'POST',
+          data: data,
+          cache: false,
+          processData: false,
+          contentType: false,
+          beforeSend: function (request) {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+          },
+          success: function (res) {
+            if (res.code == 200) {
+              alert("上传成功");
+              $("#uploadFile1").val('');
+              loadData();
+            }
+            else {
+              alert(res.message);
+            }
+          }
+        });
+      }
+    </script>
+</body>
+
+</html>

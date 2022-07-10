@@ -152,7 +152,7 @@
       })
     }
     function loadData() {
-      var getUrl = domainUrl + "/categoryMaintenance/get?categoryId=" + $("#keyWord").val();
+      var getUrl = domainUrl + "/categoryMaintenance/admin/get?categoryId=" + $("#keyWord").val();
       getMessage(getUrl).then(function (res) {
         if (res.code == 200) {
           if (res.data != null) {
