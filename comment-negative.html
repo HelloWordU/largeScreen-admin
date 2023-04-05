@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>评论区维护红绿灯预警</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+</head>
+
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">评论区维护红绿灯预警设置</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">评论区维护红绿灯预警设置</a></li>
+                                <li class="breadcrumb-item active">评论区维护红绿灯预警设置</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">红绿灯数据设置</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="keyWord">关键词</label>
+                                                <select onchange="loadData();" id="keyWord" name="keyWord"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="normalCount">正常链接</label>
+                                                <input type="number" class="form-control" name="normalCount" value="0" id="normalCount"
+                                                    placeholder="正常链接">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="negetiveCount">有负面评论的链接</label>
+                                                <input type="number" class="form-control" name="negetiveCount" value="0"
+                                                    id="negetiveCount" placeholder="有负面评论的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="noCommentCount">评论为0的链接</label>
+                                                <input type="number" class="form-control" name="noCommentCount" value="0" id="noCommentCount"
+                                                    placeholder="评论为0的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                </div>
+
+                            </div>
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">最近2小时</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last2HourNormalCount">正常链接</label>
+                                                <input type="number" class="form-control" name="last2HourNormalCount" value="0" id="last2HourNormalCount"
+                                                    placeholder="正常链接">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last2HourNegetiveCount">有负面评论的链接</label>
+                                                <input type="number" class="form-control" value="0" name="last2HourNegetiveCount"
+                                                    id="last2HourNegetiveCount" placeholder="有负面评论的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last2HourNoCommentCount">评论为0的链接</label>
+                                                <input type="number" class="form-control" name="last2HourNoCommentCount" value="0" id="last2HourNoCommentCount"
+                                                    placeholder="评论为0的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                </div>
+
+                            </div>
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">最近5小时</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last5HourNormalCount">正常链接</label>
+                                                <input type="number" class="form-control" value="0" name="last5HourNormalCount" id="last5HourNormalCount"
+                                                    placeholder="正常链接">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last5HourNegetiveCount">有负面评论的链接</label>
+                                                <input type="number" class="form-control" value="0" name="last5HourNegetiveCount"
+                                                    id="last5HourNegetiveCount" placeholder="有负面评论的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last5HourNoCommentCount">评论为0的链接</label>
+                                                <input type="number" class="form-control" name="last5HourNoCommentCount" value="0" id="last5HourNoCommentCount"
+                                                    placeholder="评论为0的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                </div>
+
+                            </div>
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">最近12小时</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last12HourNormalCount">正常链接</label>
+                                                <input type="number" class="form-control" value="0" name="last12HourNormalCount" id="last12HourNormalCount"
+                                                    placeholder="正常链接">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last12HourNegetiveCount">有负面评论的链接</label>
+                                                <input type="number" class="form-control" value="0" name="last12HourNegetiveCount"
+                                                    id="last12HourNegetiveCount" placeholder="有负面评论的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last12HourNoCommentCount">评论为0的链接</label>
+                                                <input type="number" class="form-control" value="0" name="last12HourNoCommentCount" id="last12HourNoCommentCount"
+                                                    placeholder="评论为0的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                </div>
+
+                            </div>
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">最近24小时</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last24HourNormalCount">正常链接</label>
+                                                <input type="number" class="form-control"  value="0" name="last24HourNormalCount" id="last24HourNormalCount"
+                                                    placeholder="正常链接">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last24HourNegetiveCount">有负面评论的链接</label>
+                                                <input type="number" class="form-control"  value="0" name="last24HourNegetiveCount"
+                                                    id="last24HourNegetiveCount" placeholder="有负面评论的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last24HourNoCommentCount">评论为0的链接</label>
+                                                <input type="number" class="form-control"  value="0" name="last24HourNoCommentCount" id="last24HourNoCommentCount"
+                                                    placeholder="评论为0的链接">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card-footer">
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-12">
+                            <button class="btn btn-primary" onclick="save();">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="dist/js/adminlte.js"></script>
+
+    <script src="dist/js/common.js"></script>
+    <script>
+        var sourceData = {};
+        $(function () {
+            loadKeyWord();
+
+        })
+        function loadKeyWord() {
+            var categoryUrl = domainUrl + "/category/admin/get";
+            getMessage(categoryUrl).then(function (res) {
+                if (res.code == 200) {
+                    if (res.data == null)
+                        return;
+                    res.data.forEach(element => {
+                        var optionValue = element.id;
+                        var optionText = element.name;
+                        $('#keyWord').append(new Option(optionText, optionValue))
+                    });
+                    $("#keyWord").find("option").eq(0).attr("selected", true);
+                    loadData();
+                } else {
+                    alert(res.message)
+                }
+            })
+        }
+        function loadData() {
+            var getUrl = domainUrl + "/commentNegativeConfig/get?categoryId=" + $("#keyWord").val();
+            getMessage(getUrl).then(function (res) {
+                if (res.code == 200) {
+                    if (res.data != null) {
+                        sourceData = res.data;
+                        $("#normalCount").val(res.data.normalCount);
+                        $("#negetiveCount").val(res.data.negetiveCount);
+                        $("#noCommentCount").val(res.data.noCommentCount);
+                        $("#last2HourNormalCount").val(res.data.last2HourNormalCount);
+                        $("#last2HourNegetiveCount").val(res.data.last2HourNegetiveCount);
+                        $("#last2HourNoCommentCount").val(res.data.last2HourNoCommentCount);
+                        $("#last5HourNormalCount").val(res.data.last5HourNormalCount);
+                        $("#last5HourNegetiveCount").val(res.data.last5HourNegetiveCount);
+                        $("#last5HourNoCommentCount").val(res.data.last5HourNoCommentCount);
+                        $("#last12HourNormalCount").val(res.data.last12HourNormalCount);
+                        $("#last12HourNegetiveCount").val(res.data.last12HourNegetiveCount);
+                        $("#last12HourNoCommentCount").val(res.data.last12HourNoCommentCount);
+                        $("#last24HourNormalCount").val(res.data.last24HourNormalCount);
+                        $("#last24HourNegetiveCount").val(res.data.last24HourNegetiveCount);
+                        $("#last24HourNoCommentCount").val(res.data.last24HourNoCommentCount);
+                    }
+
+                } else {
+                    alert(res.message)
+                }
+            })
+        }
+        function save() {
+            var saveUrl = domainUrl + "/commentNegativeConfig/save";
+            postMessage(saveUrl, {
+                id: sourceData.id,
+                categoryId: $("#keyWord").val(),
+                normalCount: $("#normalCount").val(),
+                negetiveCount: $("#negetiveCount").val(),
+                noCommentCount: $("#noCommentCount").val(),
+                last2HourNormalCount: $("#last2HourNormalCount").val(),
+                last2HourNegetiveCount: $("#last2HourNegetiveCount").val(),
+                last2HourNoCommentCount: $("#last2HourNoCommentCount").val(),
+                last5HourNormalCount: $("#last5HourNormalCount").val(),
+                last5HourNegetiveCount: $("#last5HourNegetiveCount").val(),
+                last5HourNoCommentCount: $("#last5HourNoCommentCount").val(),
+                last12HourNormalCount: $("#last12HourNormalCount").val(),
+                last12HourNegetiveCount: $("#last12HourNegetiveCount").val(),
+                last12HourNoCommentCount: $("#last12HourNoCommentCount").val(),
+                last24HourNormalCount: $("#last24HourNormalCount").val(),
+                last24HourNegetiveCount: $("#last24HourNegetiveCount").val(),
+                last24HourNoCommentCount: $("#last24HourNoCommentCount").val()
+            }).then(function (res) {
+                if (res.code == 200) {
+                    alert("保存成功");
+                } else {
+                    alert(res.message);
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

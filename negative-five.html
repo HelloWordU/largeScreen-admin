@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>项目基本信息</title>
+  <title>全网舆情</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -25,18 +25,18 @@
 
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-article">
+    <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">平台达标设置</h1>
+              <h1 class="m-0">五大门户和头条</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">网络监控</a></li>
-                <li class="breadcrumb-item active">平台达标设置</li>
+                <li class="breadcrumb-item"><a href="#">五大门户和头条</a></li>
+                <li class="breadcrumb-item active">全网舆情</li>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -56,8 +56,8 @@
             </div>
             <div class="col-sm-6">
               <div class=""></div>
-              <a href="javascript:void(0)" onclick="showAddModel()" class="btn btn-primary btn-sm"><i
-                  class="fa fa-copy"></i> 新增</a>
+              <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-default"
+                class="btn btn-primary btn-sm"><i class="fa fa-copy"></i> 新增</a>
             </div>
 
           </div>
@@ -73,13 +73,11 @@
     </div>
   </div>
   <!-- ./wrapper -->
-
-  <!-- ./wrapper -->
   <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">新增平台达标</h4>
+          <h4 class="modal-title">新增五大门户和头条</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -89,38 +87,67 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="addKeyword">关键词</label>
-                <select id="addKeyword" name="addKeyword" onchange="getPlantfroms()"></select>
+                <select id="addKeyword" name="addKeyword"></select>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="addPlantformId">监控平台</label>
-                <select id="addPlantformId" name="addPlantformId"></select>
+                <label for="name">时间</label>
+                <select class="form-control" id="select_time">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                </select>
+                <!-- <input type="text" class="form-control" id="name" placeholder="请输入监控平台"> -->
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="addIsReachingStandard">是否达标</label>
-              <input type="checkbox" id="addIsReachingStandard" name="addIsReachingStandard" />
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name">达标率</label>
+                <select class="form-control" id="select_state">
+                  <option value="1">绿</option>
+                  <option value="0">黄</option>
+                  <option value="-1">红</option>
+                </select>
+                <!-- <input type="text" class="form-control" id="name" placeholder="请输入监控平台"> -->
+              </div>
             </div>
           </div>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" class="btn btn-primary" onclick="saveMonitoringPlantformStatistic()">保存</button>
+          <button type="button" class="btn btn-primary" onclick="addCategoryHotWord()">保存</button>
         </div>
       </div>
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
   </div>
-
-
   <!-- REQUIRED SCRIPTS -->
   <!-- jQuery -->
   <script src="plugins/jquery/jquery.min.js"></script>
@@ -130,6 +157,8 @@
   <script src="dist/js/adminlte.js"></script>
   <!-- jsGrid -->
   <script src="plugins/jsgrid/jsgrid.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
   <script src="dist/js/common.js"></script>
   <!-- Page specific script -->
   <script>
@@ -144,7 +173,7 @@
         controller: {
           loadData: function () {
             var d = $.Deferred();
-            var getData = domainUrl + "/monitoringPlantformStatistic/getByCategoryId?categoryId=" + $("#keyWord").val();
+            var getData = domainUrl + "/negativeFive/getAll?categoryId=" + $("#keyWord").val();
             getMessage(getData).then(function (res) {
               if (res.code == 200) {
                 d.resolve(res.data);
@@ -155,15 +184,70 @@
             return d.promise();
           },
         },
+        onItemDeleted: function (args) {
+          var id = args.item.id;
+          var categoryUrl = domainUrl + "/negativeFive/delete?id=" + id;
+          postMessage(categoryUrl, {}).then(function (res) {
+            if (res.code == 200) {
+            } else {
+              alert(res.message);
+              $("#jsGrid1").jsGrid("loadData");
+            }
+          });
+        },
         onItemUpdated: function (args) {
           saveCategoryHotWord(args.item);
         },
 
         fields: [
           // { name: "id", type: "number", width: 50 },
-          { name: "plantformName", title: "监控平台", type: "text", width: 150, readOnly: true },
-          { name: "isReachingStandard", title: "达标", type: "checkbox", width: 80 },
-          { name: '操作', type: "control", width: 80, deleteButton: false, }
+          {
+            name: "time",
+            title: "时间",
+            type: "select",
+            items: [
+              { Name: "0", Id: 0 },
+              { Name: "1", Id: 1 },
+              { Name: "2", Id: 2 },
+              { Name: "3", Id: 3 },
+              { Name: "4", Id: 4 },
+              { Name: "5", Id: 5 },
+              { Name: "6", Id: 6 },
+              { Name: "7", Id: 7 },
+              { Name: "8", Id: 8 },
+              { Name: "9", Id: 9 },
+              { Name: "10", Id: 10 },
+              { Name: "11", Id: 11 },
+              { Name: "12", Id: 12 },
+              { Name: "13", Id: 13 },
+              { Name: "14", Id: 14 },
+              { Name: "15", Id: 15 },
+              { Name: "16", Id: 16 },
+              { Name: "17", Id: 17 },
+              { Name: "18", Id: 18 },
+              { Name: "19", Id: 19 },
+              { Name: "20", Id: 20 },
+              { Name: "21", Id: 21 },
+              { Name: "22", Id: 22 },
+              { Name: "23", Id: 23 },
+
+            ],
+            valueField: "Id",
+            textField: "Name"
+          },
+          {
+            name: "state",
+            title: "达标率",
+            type: "select",
+            items: [
+            { Name: "绿", Id: 1 },
+              { Name: "黄", Id: 0 },
+              { Name: "红", Id: -1 },
+            ],
+            valueField: "Id",
+            textField: "Name"
+          },
+          { name: '操作', type: "control", width: 80 }
         ]
       });
       loadKeyWord();
@@ -190,12 +274,13 @@
     function loadData() {
       $("#jsGrid1").jsGrid("loadData");
     }
-    function save(id, plantformId, isReachingStandard) {
-      var saveUrl = domainUrl + "/monitoringPlantformStatistic/save";
+    function save(id, categoryId, time ,state) {
+      var saveUrl = domainUrl + "/negativeFive/save";
       postMessage(saveUrl, {
         id: id,
-        plantformId: plantformId,
-        isReachingStandard: isReachingStandard
+        categoryId: categoryId,
+        time: time,
+        state: state
       }).then(function (res) {
         if (res.code == 200) {
           alert("保存成功");
@@ -206,44 +291,10 @@
       })
     }
     function saveCategoryHotWord(dataItem) {
-      save(dataItem.id, dataItem.plantformId, dataItem.isReachingStandard);
+      save(dataItem.id, dataItem.categoryId, dataItem.time,dataItem.state);
     }
-
-    function saveMonitoringPlantformStatistic() {
-      var id = null;
-      var plantformId =  $("#addPlantformId").val();
-      if(plantformId==null || plantformId==undefined || plantformId=="")
-      {
-        alert("请选择一个平台");
-        return;
-      }
-      var isReachingStandard = $("#addIsReachingStandard").attr("checked");
-      save(id,plantformId,isReachingStandard);
-
-    }
-
-    function showAddModel() {
-      $("#modal-default").modal('show');
-      getPlantfroms();
-    }
-    function getPlantfroms() {
-      var currentKey = $("#addKeyword").val();
-      var getData = domainUrl + "/monitoringPlantform/getByCategoryId?categoryId=" + currentKey;
-      getMessage(getData).then(function (res) {
-        if (res.code == 200) {
-          if (res.data == null)
-            return;
-          $("#addPlantformId").html("");
-          res.data.forEach(element => {
-            var optionValue = element.id;
-            var optionText = element.name;
-            $('#addPlantformId').append(new Option(optionText, optionValue));
-          });
-          //  d.resolve(res.data);
-        } else {
-          alert(res.message)
-        }
-      })
+    function addCategoryHotWord() {
+      save(null, $('#addKeyword').val(), $("#select_time").val(), $("#select_state").val());
     }
   </script>
 </body>
